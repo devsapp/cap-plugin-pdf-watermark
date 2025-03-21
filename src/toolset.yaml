@@ -1,0 +1,89 @@
+name: pdf-watermark
+description: 给 PDF 文件添加水印
+
+spec:
+  schema:
+    type: OpenAPI
+    detail: 
+      openapi: 3.0.1
+      info:
+        title: PDF Watermark Service
+        description: A service to add watermarks to PDF files
+        version: "v1"
+      servers:
+        - url: ""
+      paths:
+        /:
+          post:
+            summary: Add watermark to PDF
+            description: Download a PDF, add a watermark, and upload to OSS
+            operationId: addWatermark
+            parameters:
+              - name: pdf_url
+                in: query
+                required: true
+                schema:
+                  type: string
+                  format: uri
+                description: URL of the PDF file to be watermarked
+            requestBody:
+              required: true
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      watermark:
+                        type: object
+                        properties:
+                          mark_text:
+                            type: string
+                            description: Text to be used as watermark
+                          font:
+                            type: string
+                            default: Helvetica
+                          font_size:
+                            type: integer
+                            default: 30
+                          font_color:
+                            type: array
+                            items:
+                              type: number
+                            minItems: 3
+                            maxItems: 3
+                            default: [0, 0, 0]
+                          rotate:
+                            type: number
+                            default: 0
+                          opacity:
+                            type: number
+                            default: 0.1
+                          density:
+                            type: array
+                            items:
+                              type: number
+                            minItems: 2
+                            maxItems: 2
+                            default: [198.4251968503937, 283.46456692913387]
+                        required:
+                          - mark_text
+            responses:
+              '200':
+                description: Successful operation
+                content:
+                  application/json:    
+                    schema:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          enum: [Success, Failed]
+                        message:
+                          type: string
+                        presigned_url:
+                          type: string
+                          format: uri
+              '400':
+                description: Bad request
+              '500':
+                description: Internal server error

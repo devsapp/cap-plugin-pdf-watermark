@@ -1,0 +1,12 @@
+pdf-watermark:
+  default:
+    languages:
+      - python3.12
+    cache:
+      paths:
+        - "~/.cache"
+    steps:
+      - run: mkdir -p python
+        path: ./code
+      - run: pip install --no-deps -r requirements.txt -t ./python
+        path: ./code
